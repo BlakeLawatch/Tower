@@ -30,7 +30,7 @@ export default {
 }
 
 body{
-  background-image: url(src/assets/img/harshil-gudka-kfxEUCTUeyg-unsplash.jpg);
+  background-image: url(src/assets/img/wesley-tingey-mvLyHPRGLCs-unsplash.jpg);
  
   background-position: bottom;
   background-size: cover;

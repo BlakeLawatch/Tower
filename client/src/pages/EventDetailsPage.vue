@@ -3,8 +3,16 @@
             <section class="row">
                 <div class="col-12 col-md-4">
                    <img class="rounded" :src="activeEvent.coverImg" alt="src/assets/img/damian-patkowski-T-LfvX-7IVg-unsplash.jpg">
+                   <div class="d-flex justify-content-around my-2">
+                    <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                         Create Event
+                    </button>
+                    <CreateEventModalComponent />
+                       <button @click="cancelEvent()" class="btn btn-danger rounded-pill">Cancel Event</button>
+
+                   </div>
                 </div>
-                <div class="col-12 col-md-7 card-bg rounded text-light">
+                <div class="col-12 col-md-8 card-bg rounded text-light">
                     <h2>{{ activeEvent.name }}</h2>
                     <h5>{{ activeEvent.description }}</h5>
                 </div>
@@ -19,30 +27,46 @@ import { useRoute } from 'vue-router';
 import { towerEventsService } from '../services/TowerEventsService';
 import { AppState} from '../AppState.js'
 import Pop from '../utils/Pop';
+import CreateEventModalComponent from '../components/CreateEventModalComponent.vue';
+
+
 
 
 export default {
-    setup(){
-        onMounted(()=> {
-        getEventById()
-        })
-        const route = useRoute()
-
-
-        async function getEventById(){
+    setup() {
+        onMounted(() => {
+            getEventById();
+        });
+        const route = useRoute();
+        async function getEventById() {
             try {
-                const eventId = route.params.eventId
-                await towerEventsService.getEventById(eventId)
-            } catch (error) {
-                Pop.error(error)
+                const eventId = route.params.eventId;
+                await towerEventsService.getEventById(eventId);
             }
+            catch (error) {
+                Pop.error(error);
+            }
+        }
+        return {
+            activeEvent: computed(() => AppState.activeEvent),
+
+            async cancelEvent(){
+             try {
+                const wantsToCancel = await Pop.confirm('Cancel this event?')
+                if(!wantsToCancel){
+                    return
+                }
+
+                 const eventId = route.params.eventId
+                 await towerEventsService.cancelEvent(eventId)
+                
+             } catch (error) {
+                Pop.error(error)
+             }
 }
-
-
-    return { 
-        activeEvent: computed(()=> AppState.activeEvent)
-     }
-    }
+        };
+    },
+    components: { CreateEventModalComponent }
 };
 </script>
 
@@ -58,12 +82,12 @@ img{
 }
 
 img:hover{
-    background-color: #6e33976a;
-    box-shadow: 4px 4px 20px #6d3397c6;
+    background-color: #6d3397;
+    box-shadow: 4px 4px 60px #6d3397;
 }
 
 .card-bg{
-background-color:#6e33976a;
+background-color:#6d3397a9;
 }
 
 
