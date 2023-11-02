@@ -1,8 +1,10 @@
 <template>
     <router-link :to="{name: 'EventDetails', params: { eventId: towerEventProp.id}}">
         <div class="rounded">
-            <img class="rounded my-3" :src="towerEventProp.coverImg" alt="event in your area">
-           <p class=" rounded bg-dark text-light p-1 my-1">{{ towerEventProp.name }}</p>
+            <img v-if="towerEventProp.isCanceled" class="rounded my-3 img-cancelled" :src="towerEventProp.coverImg" alt="event in your area">
+            <img v-else class="rounded my-3" :src="towerEventProp.coverImg" alt="event in your area">
+
+           <p class="text-center rounded bg-dark text-light p-1 my-1">{{ towerEventProp.name }}</p>
            </div>
     </router-link>
 </template>
@@ -31,5 +33,10 @@ img{
     width: 20vw;
     object-fit: cover;
     object-position: center;
+}
+
+.img-cancelled{
+    border: 2px solid red;
+    opacity: 0.5;
 }
 </style>

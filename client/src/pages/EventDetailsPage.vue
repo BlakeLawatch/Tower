@@ -2,7 +2,9 @@
     <div v-if="activeEvent" class="container-fluid">
             <section class="row">
                 <div class="col-12 col-md-4">
-                   <img class="rounded" :src="activeEvent.coverImg" alt="src/assets/img/damian-patkowski-T-LfvX-7IVg-unsplash.jpg">
+                    
+                   <img v-if="activeEvent.isCanceled" class="img-cancelled rounded" :src="activeEvent.coverImg" alt="Your event">
+                   <img v-else class="rounded" :src="activeEvent.coverImg" alt="">
                    <div class="d-flex justify-content-around my-2">
                     <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#createEventModal">
                          Create Event
@@ -49,6 +51,7 @@ export default {
         }
         return {
             activeEvent: computed(() => AppState.activeEvent),
+            account: computed(()=> AppState.account),
 
             async cancelEvent(){
              try {
@@ -59,6 +62,7 @@ export default {
 
                  const eventId = route.params.eventId
                  await towerEventsService.cancelEvent(eventId)
+               
                 
              } catch (error) {
                 Pop.error(error)
@@ -88,6 +92,11 @@ img:hover{
 
 .card-bg{
 background-color:#6d3397a9;
+}
+
+.img-cancelled{
+    border: 2px solid red;
+    opacity: 0.5;
 }
 
 
