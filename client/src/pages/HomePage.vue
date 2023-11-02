@@ -2,7 +2,10 @@
  <div class="container-fluid">
   <section class="row">
 <div class="col-12">
- Some kind of header or something?
+ <button v-if="account" type="button" class="btn btn-light rounded-pill" data-bs-toggle="modal" data-bs-target="#createEventModal">
+                   Create Event
+                    
+                    </button>
 </div>
 </section>
 <section class="row">
@@ -40,7 +43,8 @@ export default {
             getEvents();
         });
         return {
-            towerEvents: computed(() => AppState.towerEvents)
+            towerEvents: computed(() => AppState.towerEvents),
+            account: computed(()=> AppState.account)
         };
     },
     components: { TowerEventComponent }

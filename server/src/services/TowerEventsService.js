@@ -3,16 +3,16 @@ import { Forbidden } from "../utils/Errors.js"
 
 class TowerEventService {
     async getTowerEvents(body) {
-        const newEvent = await dbContext.TowerEvent.find(body)
+        const newEvent = await dbContext.TowerEvent.find(body).populate('creator ticketCount')
         return newEvent
     }
     async postTowerEvents(eventData) {
-        const newEvent = await dbContext.TowerEvent.create(eventData)
+        const newEvent = (await dbContext.TowerEvent.create(eventData)).populate('creator ticketCount')
         return newEvent
     }
 
     async getEventById(eventId) {
-        const events = await dbContext.TowerEvent.findById(eventId)
+        const events = await dbContext.TowerEvent.findById(eventId).populate('creator ticketCount')
         return events
     }
 

@@ -4,7 +4,7 @@ export class TowerEvent {
         this.creatorId = data.creatorId
         this.name = data.name
         this.description = data.description
-        this.coverImg = data.coverImg || "src/assets/img/damian-patkowski-T-LfvX-7IVg-unsplash.jpg"
+        this.coverImg = data.coverImg || "src/assets/img/wesley-tingey-mvLyHPRGLCs-unsplash.jpg"
         this.location = data.location
         this.capacity = data.capacity
         this.startDate = data.startDate

@@ -3,15 +3,10 @@
             <section class="row">
                 <div class="col-12 col-md-4">
                     
-                   <img v-if="activeEvent.isCanceled" class="img-cancelled rounded" :src="activeEvent.coverImg" alt="Your event">
-                   <img v-else class="rounded" :src="activeEvent.coverImg" alt="">
-                   <div class="d-flex justify-content-around my-2">
-                    <button type="button" class="btn btn-primary rounded-pill" data-bs-toggle="modal" data-bs-target="#createEventModal">
-                         Create Event
-                    </button>
-                    <CreateEventModalComponent />
-                       <button @click="cancelEvent()" class="btn btn-danger rounded-pill">Cancel Event</button>
-
+                   <img v-if="activeEvent.isCanceled" class="img-fluid img-cancelled rounded" :src="activeEvent.coverImg" alt="Your event">
+                   <img v-else class="rounded img-fluid" :src="activeEvent.coverImg" alt="">
+                   <div v-if="activeEvent.creatorId == account.id"  class="d-flex justify-content-around my-2">
+                     <button @click="cancelEvent()" class="btn btn-danger rounded-pill">Cancel Event</button>
                    </div>
                 </div>
                 <div class="col-12 col-md-8 card-bg rounded text-light">
@@ -29,7 +24,7 @@ import { useRoute } from 'vue-router';
 import { towerEventsService } from '../services/TowerEventsService';
 import { AppState} from '../AppState.js'
 import Pop from '../utils/Pop';
-import CreateEventModalComponent from '../components/CreateEventModalComponent.vue';
+
 
 
 
@@ -70,7 +65,7 @@ export default {
 }
         };
     },
-    components: { CreateEventModalComponent }
+    
 };
 </script>
 
@@ -78,7 +73,7 @@ export default {
 <style lang="scss" scoped>
 img{
     max-height: 40vh;
-    max-width: 50vh;
+    max-width: 100%;
     object-fit: cover;
     object-position: center;
     box-shadow: 2px 2px 10px #6e33976a;
