@@ -30,7 +30,7 @@
           </div>
           <div class="mb-3">
              <label for="startDate" class="form-label">Date of Event</label>
-             <input v-model="editable.startDate" type="text" class="form-control" id="startDate" required>
+             <input v-model="editable.startDate" type="date" class="form-control" id="startDate" required>
           </div>
           <div class="mb-3">
              <label for="type" class="form-label">Type of Event</label>
@@ -56,7 +56,8 @@ import { ref } from 'vue';
 import { towerEventsService } from '../services/TowerEventsService';
 import Pop from '../utils/Pop';
 import { Modal } from 'bootstrap';
-import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
+
 
 
 
@@ -67,6 +68,7 @@ export default {
     setup(){
       const types = ['concert', 'convention', 'sport', 'digital'];
       const editable= ref({})
+      const router = useRouter()
       
 
 
@@ -80,9 +82,9 @@ editable,
             const eventData = editable.value
             const event = await towerEventsService.createEvent(eventData)
             Pop.success("Created Event!")
-            // editable.value = {};
-            // Modal.getOrCreateInstance(#createEventModal).hide()
-            
+            editable.value = {};
+            Modal.getOrCreateInstance('#createEventModal').hide()
+            router.push({name: 'EventDetails', params: { eventId: event.id}})
           } catch (error) {
             Pop.error(error)
           }

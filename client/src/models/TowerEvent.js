@@ -6,6 +6,7 @@ export class TowerEvent {
         this.description = data.description
         this.coverImg = data.coverImg || "src/assets/img/wesley-tingey-mvLyHPRGLCs-unsplash.jpg"
         this.location = data.location
+        this.ticketCount = data.ticketCount
         this.capacity = data.capacity
         this.startDate = data.startDate
         this.isCanceled = data.isCanceled || false
