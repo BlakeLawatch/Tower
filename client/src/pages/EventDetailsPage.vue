@@ -7,7 +7,7 @@
                    <img v-else class="rounded img-fluid" :src="activeEvent.coverImg" alt="">
                    <h1 class="bold text-light" v-if="activeEvent.isCanceled"> Sorry, this event has been cancelled</h1>
                    <div class="d-flex justify-content-around my-2">
-                    <button v-if="!activeEvent.isCanceled && activeEvent.ticketCount <= activeEvent.capacity" class="btn btn-warning" @click="createTicket()">Buy a Ticket</button>
+                    <button v-if="!activeEvent.isCanceled && activeEvent.ticketCount < activeEvent.capacity" class="btn btn-warning" @click="createTicket()">Buy a Ticket</button>
                      <button v-if="activeEvent.creatorId == account.id && activeEvent.isCanceled == false" @click="cancelEvent()" class="btn btn-danger">Cancel Event</button>
                    </div>
                 </div>
@@ -69,6 +69,8 @@ export default {
             activeEvent: computed(() => AppState.activeEvent),
             account: computed(()=> AppState.account),
             tickets: computed(()=> AppState.tickets),
+            // TODO create a computed to check to see if person is attending event....you will use this for the styling indication
+            // NOTE ^^ refer to the isCollaborator on PostIt
 
             async cancelEvent(){
              try {
@@ -90,6 +92,7 @@ export default {
                     Pop.success('Your ticket has been purchased, enjoy the event!')
                     const eventId = route.params.eventId
                     await ticketsService.createTicket(eventId)
+                    // TODO increase ticketcount for the event
                     
                 } catch (error) {
                     Pop.error(error)

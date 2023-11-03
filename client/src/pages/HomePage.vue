@@ -10,13 +10,13 @@
               Create Event   </button>
       </div>
     </section>
-<section class="row">
-  <div class="col-12">
-    <div class="bg-primary p-4 d-flex justify-content-around">
-      <button class="btn btn-outline-light rounded-pill w-100" @click="changeEventType('')"> All </button>
-      <button class="btn btn-outline-light rounded-pill w-100 mx-1" @click="changeEventType(eventType)" v-for="eventType in eventTypes" :key="eventType"> {{ eventType }}</button>
-    </div>
-  </div>
+<section class="row bg-primary p-4 justify-content-around">
+  <!-- <div class="col-12"> -->
+    <!-- <div class="bg-primary p-4 d-flex justify-content-around"> -->
+      <button class="btn btn-outline-light rounded-pill  col-12 col-md-2 my-1" @click="changeEventType('')"> All </button>
+      <button class="btn btn-outline-light rounded-pill  mx-1 col-12 col-md-2 my-1" @click="changeEventType(eventType)" v-for="eventType in eventTypes" :key="eventType"> {{ eventType }}</button>
+    <!-- </div> -->
+  <!-- </div> -->
 </section>
 <section class="row">
   <div v-for="towerEvent in towerEvents" :key="towerEvent.id" class="col-6 col-md-3">

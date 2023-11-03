@@ -3,7 +3,7 @@ import { Schema } from "mongoose";
 export const TowerEventSchema = new Schema({
     creatorId: { type: Schema.Types.ObjectId, required: true, ref: 'Account' },
     name: { type: String, required: true, maxLength: 500 },
-    description: { type: String, required: true, maxLength: 500 },
+    description: { type: String, required: true, maxLength: 1000 },
     coverImg: { type: String, required: true, maxLength: 500 },
     location: { type: String, required: true, maxLength: 100 },
     capacity: { type: Number, required: true },
