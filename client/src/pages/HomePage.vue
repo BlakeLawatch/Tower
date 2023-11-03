@@ -2,7 +2,7 @@
  <div class="container-fluid">
    <section class="row my-2">
     <div v-for="myTicket in myTickets" :key="myTicket" class="col-8">
-      {{ myTicket.event }}
+      <!-- TODO get my events that I have tickets for working here -->
       <!-- <img :src="myTicket.event.coverImg " alt=""> -->
     </div>
       <div class="col-4">
