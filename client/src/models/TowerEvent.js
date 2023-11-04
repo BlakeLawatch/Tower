@@ -8,7 +8,7 @@ export class TowerEvent {
         this.location = data.location
         this.ticketCount = data.ticketCount
         this.capacity = data.capacity
-        this.startDate = data.startDate
+        this.startDate = new Date(data.startDate)
         this.isCanceled = data.isCanceled || false
         this.type = data.type
         this.createdAt = new Date(data.createdAt)

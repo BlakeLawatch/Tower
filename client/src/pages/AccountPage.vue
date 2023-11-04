@@ -4,6 +4,12 @@
     <img class="rounded" :src="account.picture" alt="" />
     <p>{{ account.email }}</p>
   </div>
+
+  <!-- TODO finish this later -->
+  <!-- <div v-for="ticket in tickets" :key="ticket">
+    <img :src="ticket.profile.picture" alt="">
+    
+  </div> -->
 </template>
 
 <script>
@@ -12,7 +18,8 @@ import { AppState } from '../AppState';
 export default {
   setup() {
     return {
-      account: computed(() => AppState.account)
+      account: computed(() => AppState.account),
+      tickets: computed(() => AppState.myTotalTickets)
     }
   }
 }

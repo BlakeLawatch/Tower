@@ -11,15 +11,38 @@
                      <button v-if="activeEvent.creatorId == account.id && activeEvent.isCanceled == false" @click="cancelEvent()" class="btn btn-danger">Cancel Event</button>
                    </div>
                 </div>
-                <div class="col-12 col-md-7 card-bg rounded text-light my-4">
-                    <h2>{{ activeEvent.name }}</h2>
-                    <h5>{{ activeEvent.description }}</h5>
+                <div class="col-12 col-md-6 card-bg rounded text-light my-4 d-flex">
+                    <div class="col-7">
+                        <h2>{{ activeEvent.name }}</h2>
+                        <h5>{{ activeEvent.description }}</h5>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <h6> Location: {{ activeEvent.location }}</h6>
+                        <h6> Start Date: {{ activeEvent.startDate.toLocaleDateString() }}</h6>
+                        <h6> Tickets Purchased: {{ activeEvent.ticketCount }}</h6>
+                        <h6> Tickets Left: {{ activeEvent.capacity }}</h6>
+                    </div>
                 </div>
-           
-                <div class="col-11 ms-3 p-3 card-bg rounded text-light">
-                   <img v-for="ticket in tickets" :key="ticket"  class="rounded-circle profile-img mx-2" :title="ticket.profile.name" :src="ticket.profile.picture" :alt="ticket.profile.name">
+                
+                <div v-for="ticket in tickets" :key="ticket"   class="col-3 ms-3 p-3 card-bg rounded text-light">
+                    <img class="rounded-circle profile-img m-1" :title="ticket.profile.name" :src="ticket.profile.picture" :alt="ticket.profile.name">
+                    <h6 v-if="ticket.profile.id == account.id" >You are now attending this event</h6>
                 </div>
+
             </section>
+            <section>
+
+            </section>
+            <CommentModal />
+            <div v-for="comment in comments" :key="comment" class="col-12 text-light m-2 d-flex comment-card rounded p-3">
+                <div class="col-5">
+                    <img class="profile-img rounded-circle my-1 img-fluid" :src="comment.creator.picture" alt="">
+                    <p>{{ comment.creator.name }}</p>
+                </div>
+                <div class="col-7 shadow rounded p-2">
+                    {{ comment.body }}
+                </div>
+            </div>
     </div>
 </template>
 
@@ -31,6 +54,8 @@ import { towerEventsService } from '../services/TowerEventsService';
 import { ticketsService } from '../services/TicketsService';
 import { AppState} from '../AppState.js'
 import Pop from '../utils/Pop';
+import CommentModal from '../components/CommentModal.vue';
+import { commentsService } from '../services/CommentsService';
 
 
 
@@ -40,7 +65,8 @@ export default {
     setup() {
         onMounted(() => {
             getEventById();
-            getTicketsByEventId()
+            getTicketsByEventId();
+            getCommentsByEventId()
         });
         const route = useRoute();
         async function getEventById() {
@@ -52,55 +78,59 @@ export default {
                 Pop.error(error);
             }
         }
-
-        async function getTicketsByEventId(){
+        async function getTicketsByEventId() {
             try {
-                const eventId = route.params.eventId
-                await ticketsService.getTicketsByEventId(eventId)
-            } catch (error) {
-                Pop.error
+                const eventId = route.params.eventId;
+                await ticketsService.getTicketsByEventId(eventId);
+            }
+            catch (error) {
+                Pop.error;
             }
         }
 
-
-
-
+        async function getCommentsByEventId(){
+            try {
+                const eventId = route.params.eventId
+                await commentsService.getCommentsByEventId(eventId)
+                
+            } catch (error) {
+                Pop.error(error)
+            }
+        }
         return {
             activeEvent: computed(() => AppState.activeEvent),
-            account: computed(()=> AppState.account),
-            tickets: computed(()=> AppState.tickets),
+            account: computed(() => AppState.account),
+            tickets: computed(() => AppState.tickets),
+            comments: computed(()=> AppState.comments),
             // TODO create a computed to check to see if person is attending event....you will use this for the styling indication
             // NOTE ^^ refer to the isCollaborator on PostIt
-
-            async cancelEvent(){
-             try {
-                const wantsToCancel = await Pop.confirm('Cancel this event?')
-                if(!wantsToCancel){
-                    return
-                }
-
-                 const eventId = route.params.eventId
-                 await towerEventsService.cancelEvent(eventId)
-               
-                
-             } catch (error) {
-                Pop.error(error)
-             }
-            },
-            async createTicket(){
+            async cancelEvent() {
                 try {
-                    Pop.success('Your ticket has been purchased, enjoy the event!')
-                    const eventId = route.params.eventId
-                    await ticketsService.createTicket(eventId)
-                    // TODO increase ticketcount for the event
-                    
-                } catch (error) {
-                    Pop.error(error)
+                    const wantsToCancel = await Pop.confirm('Cancel this event?');
+                    if (!wantsToCancel) {
+                        return;
+                    }
+                    const eventId = route.params.eventId;
+                    await towerEventsService.cancelEvent(eventId);
                 }
-            }
+                catch (error) {
+                    Pop.error(error);
+                }
+            },
+            async createTicket() {
+                try {
+                    Pop.success('Your ticket has been purchased, enjoy the event!');
+                    const eventId = route.params.eventId;
+                    await ticketsService.createTicket(eventId);
+                    // TODO increase ticketcount for the event
+                }
+                catch (error) {
+                    Pop.error(error);
+                }
+            },
         };
     },
-    
+    components: { CommentModal }
 };
 </script>
 
@@ -132,7 +162,10 @@ background-color:#6d3397a9;
 .profile-img{
     max-height: 8vh;
     max-width: 8vh;
-    
+}
+
+.comment-card{
+    background-color: #1abc9cd3;
 }
 
 
