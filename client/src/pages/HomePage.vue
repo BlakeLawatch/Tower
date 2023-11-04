@@ -1,22 +1,14 @@
 <template>
  <div class="container-fluid">
    <section class="row my-2">
-    <div v-for="myTicket in myTickets" :key="myTicket" class="col-8">
-      <!-- TODO get my events that I have tickets for working here -->
-      <!-- <img :src="myTicket.event.coverImg " alt=""> -->
-    </div>
       <div class="col-4">
         <button v-if="account" type="button" class="btn btn-light rounded-pill my-2" data-bs-toggle="modal" data-bs-target="#createEventModal">
               Create Event   </button>
       </div>
     </section>
 <section class="row bg-primary p-4 justify-content-around">
-  <!-- <div class="col-12"> -->
-    <!-- <div class="bg-primary p-4 d-flex justify-content-around"> -->
       <button class="btn btn-outline-light rounded-pill  col-12 col-md-2 my-1" @click="changeEventType('')"> All </button>
       <button class="btn btn-outline-light rounded-pill  mx-1 col-12 col-md-2 my-1" @click="changeEventType(eventType)" v-for="eventType in eventTypes" :key="eventType"> {{ eventType }}</button>
-    <!-- </div> -->
-  <!-- </div> -->
 </section>
 <section class="row">
   <div v-for="towerEvent in towerEvents" :key="towerEvent.id" class="col-6 col-md-3">

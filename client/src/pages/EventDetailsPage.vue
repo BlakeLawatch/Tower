@@ -3,11 +3,12 @@
             <section class="row">
                 <div class="col-12 col-md-4 my-4">
                     
-                   <img v-if="activeEvent.isCanceled" class="img-fluid img-cancelled rounded" :src="activeEvent.coverImg" alt="Your event">
-                   <img v-else class="rounded img-fluid" :src="activeEvent.coverImg" alt="">
+                    <img v-if="activeEvent.isCanceled" class="img-fluid img-cancelled rounded" :src="activeEvent.coverImg" alt="Your event">
+                    <img v-if="activeEvent.capacity == 0" class="img-fluid img-cancelled rounded" :src="activeEvent.coverImg" alt="Your event">
+                    <img v-else class="rounded img-fluid" :src="activeEvent.coverImg" alt="">
                    <h1 class="bold text-light" v-if="activeEvent.isCanceled"> Sorry, this event has been cancelled</h1>
                    <div class="d-flex justify-content-around my-2">
-                    <button v-if="!activeEvent.isCanceled && activeEvent.ticketCount < activeEvent.capacity" class="btn btn-warning" @click="createTicket()">Buy a Ticket</button>
+                    <button v-if="!activeEvent.isCanceled && activeEvent.capacity >= 1" class="btn btn-warning" @click="createTicket()">Buy a Ticket</button>
                      <button v-if="activeEvent.creatorId == account.id && activeEvent.isCanceled == false" @click="cancelEvent()" class="btn btn-danger">Cancel Event</button>
                    </div>
                 </div>
@@ -19,8 +20,9 @@
                     <div class="col-12 col-md-4">
                         <h6> Location: {{ activeEvent.location }}</h6>
                         <h6> Start Date: {{ activeEvent.startDate.toLocaleDateString() }}</h6>
-                        <h6> Tickets Purchased: {{ activeEvent.ticketCount }}</h6>
-                        <h6> Tickets Left: {{ activeEvent.capacity }}</h6>
+                        <h6> Total Tickets Purchased: {{ activeEvent.ticketCount }}</h6>
+                        <h6 v-if="activeEvent.capacity > 0"> Tickets Left: {{ activeEvent.capacity }}</h6>
+                        <p class="fs-1 border border-danger bg-danger text-center" v-else> Show is sold out</p>
                     </div>
                 </div>
                 
@@ -31,18 +33,19 @@
 
             </section>
             <section>
+                <CommentModal />
+                <div v-for="comment in comments" :key="comment" class="col-12 text-light m-2 d-flex comment-card rounded p-3">
+                    <div class="col-5">
+                        <img class="profile-img rounded-circle my-1 img-fluid" :src="comment.creator.picture" alt="">
+                        <p>{{ comment.creator.name }}</p>
+                    </div>
+                    <div class="col-7 shadow rounded p-2">
+                        {{ comment.body }}
+                        <button v-if="comment.creatorId == account.id"  @click="destroyComment()" class=" text-end btn btn-danger mdi mdi-delete-empty"></button>
+                    </div>
+                </div>
 
             </section>
-            <CommentModal />
-            <div v-for="comment in comments" :key="comment" class="col-12 text-light m-2 d-flex comment-card rounded p-3">
-                <div class="col-5">
-                    <img class="profile-img rounded-circle my-1 img-fluid" :src="comment.creator.picture" alt="">
-                    <p>{{ comment.creator.name }}</p>
-                </div>
-                <div class="col-7 shadow rounded p-2">
-                    {{ comment.body }}
-                </div>
-            </div>
     </div>
 </template>
 
@@ -62,6 +65,7 @@ import { commentsService } from '../services/CommentsService';
 
 
 export default {
+
     setup() {
         onMounted(() => {
             getEventById();
@@ -122,12 +126,28 @@ export default {
                     Pop.success('Your ticket has been purchased, enjoy the event!');
                     const eventId = route.params.eventId;
                     await ticketsService.createTicket(eventId);
-                    // TODO increase ticketcount for the event
+                
+                    this.activeEvent.ticketCount ++
+                    this.activeEvent.capacity --
+                    AppState.activeEvent = new AppState.activeEvent
                 }
                 catch (error) {
                     Pop.error(error);
                 }
             },
+
+            async destroyComment(){
+                 try {
+                     const deleteComment = await Pop.confirm('You wanna delete this comment?')
+                     if(!deleteComment){
+                         return
+                        }
+                    const commentId = route.params.id
+                    await commentsService.destroyComment(commentId)
+                } catch (error) {
+                    Pop.error(error)
+}
+            }
         };
     },
     components: { CommentModal }

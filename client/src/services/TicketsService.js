@@ -17,6 +17,11 @@ async getTicketsByEventId(eventId){
     logger.log('got tickets/event', res.data)
     AppState.tickets = res.data.map((tickets) => new Ticket(tickets))
 }
+
+async cancelTicket(ticketId){
+    const res = await api.delete(`api/tickets/${ticketId}`)
+    logger.log('deleted ticket', res.data)
+}
 }
 
 export const ticketsService = new TicketsService()
