@@ -63,7 +63,6 @@ export class TowerEventController extends BaseController {
             const eventId = req.params.eventId
             const userId = req.userInfo.id
             const eventData = req.body
-            // eventData.id = eventId
             const editedEvent = await towerEventsService.editEvent(eventId, userId, eventData)
             return res.send(editedEvent)
         } catch (error) {

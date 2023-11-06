@@ -36,6 +36,7 @@ const route = useRoute()
       account: computed(() => AppState.account),
       tickets: computed(() => AppState.myTotalTickets),
       destroyTicket: computed(()=> AppState.tickets),
+      route,
 
 
       async cancelTicket(){
@@ -44,7 +45,7 @@ const route = useRoute()
           if (!wantsToCancel){
             return
           }
-          const ticketId = route.params.eventId
+          const ticketId = route.params._id
           await ticketsService.cancelTicket(ticketId)
         } catch (error) {
           Pop.error(error)

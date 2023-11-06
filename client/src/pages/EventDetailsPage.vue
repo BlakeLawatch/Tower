@@ -23,12 +23,13 @@
                         <h6> Total Tickets Purchased: {{ activeEvent.ticketCount }}</h6>
                         <h6 v-if="activeEvent.capacity > 0"> Tickets Left: {{ activeEvent.capacity }}</h6>
                         <p class="fs-1 border border-danger bg-danger text-center" v-else> Show is sold out</p>
+                        <p v-if="activeEvent.ticketCount > 0"> You are attending this event</p>
                     </div>
                 </div>
                 
                 <div v-for="ticket in tickets" :key="ticket"   class="col-3 ms-3 p-3 card-bg rounded text-light">
                     <img class="rounded-circle profile-img m-1" :title="ticket.profile.name" :src="ticket.profile.picture" :alt="ticket.profile.name">
-                    <h6 v-if="ticket.profile.id == account.id" >You are now attending this event</h6>
+                    <h6 v-if="ticket.profile.id == account.id" >Here is a ticket!</h6>
                 </div>
 
             </section>
@@ -102,10 +103,12 @@ export default {
             }
         }
         return {
+            route,
             activeEvent: computed(() => AppState.activeEvent),
             account: computed(() => AppState.account),
             tickets: computed(() => AppState.tickets),
             comments: computed(()=> AppState.comments),
+            myTickets: computed(()=> AppState.myTotalTickets),
             // TODO create a computed to check to see if person is attending event....you will use this for the styling indication
             // NOTE ^^ refer to the isCollaborator on PostIt
             async cancelEvent() {
@@ -126,10 +129,10 @@ export default {
                     Pop.success('Your ticket has been purchased, enjoy the event!');
                     const eventId = route.params.eventId;
                     await ticketsService.createTicket(eventId);
+                    // AppState.activeEvent = new AppState.activeEvent
                 
                     this.activeEvent.ticketCount ++
                     this.activeEvent.capacity --
-                    AppState.activeEvent = new AppState.activeEvent
                 }
                 catch (error) {
                     Pop.error(error);
@@ -142,7 +145,7 @@ export default {
                      if(!deleteComment){
                          return
                         }
-                    const commentId = route.params.id
+                    const commentId = route.params.commentId
                     await commentsService.destroyComment(commentId)
                 } catch (error) {
                     Pop.error(error)

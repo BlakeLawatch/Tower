@@ -20,7 +20,7 @@ class TowerEventService {
         if (editedEvent.creatorId != userId) {
             throw new BadRequest('not authorized to edit')
         }
-        if (this.cancelEvent) {
+        else if (!this.cancelEvent) {
             throw new BadRequest('not yours to edit')
         }
         editedEvent.name = eventData.name
@@ -30,12 +30,13 @@ class TowerEventService {
         return editedEvent
     }
 
-
     async cancelEvent(eventId, userId) {
         const cancelledEvent = await this.getEventById(eventId)
         if (cancelledEvent.creatorId != userId) {
             throw new BadRequest('Not your event to cancel')
         }
+
+
         cancelledEvent.isCanceled = !cancelledEvent.isCanceled
         await cancelledEvent.save()
         return cancelledEvent
