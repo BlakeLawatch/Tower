@@ -12,7 +12,7 @@
     <div class="col-6 col-md-2 my-3 text-center" v-for="ticket in tickets" :key="ticket">
       <img class="ticket-img border border-dark" :src="ticket.event.coverImg" alt="" :title="ticket.event.name">
       <div>
-        <button @click="cancelTicket()" class=" text-center btn btn-danger mdi mdi-delete-empty mt-1">Cancel Ticket</button>
+        <button @click="cancelTicket(ticket.id)" class=" text-center btn btn-danger mdi mdi-delete-empty mt-1">Cancel Ticket</button>
 
       </div>
     </div>
@@ -39,13 +39,13 @@ const route = useRoute()
       route,
 
 
-      async cancelTicket(){
+      async cancelTicket(ticketId){
         try {
           const wantsToCancel = await Pop.confirm('Cancel this ticket?')
           if (!wantsToCancel){
             return
           }
-          const ticketId = route.params._id
+          // const ticketId = route.params._id
           await ticketsService.cancelTicket(ticketId)
         } catch (error) {
           Pop.error(error)

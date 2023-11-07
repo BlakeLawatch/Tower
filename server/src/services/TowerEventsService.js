@@ -17,12 +17,15 @@ class TowerEventService {
     }
     async editEvent(eventId, userId, eventData) {
         const editedEvent = await dbContext.TowerEvent.findById(eventId)
+
         if (editedEvent.creatorId != userId) {
-            throw new BadRequest('not authorized to edit')
-        }
-        else if (!this.cancelEvent) {
             throw new BadRequest('not yours to edit')
         }
+
+        if (editedEvent.isCanceled) {
+            throw new BadRequest('not authorized to edit')
+        }
+
         editedEvent.name = eventData.name
         editedEvent.description = eventData.description
 

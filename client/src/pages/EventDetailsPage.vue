@@ -21,8 +21,8 @@
                         <h6> Location: {{ activeEvent.location }}</h6>
                         <h6> Start Date: {{ activeEvent.startDate.toLocaleDateString() }}</h6>
                         <h6> Total Tickets Purchased: {{ activeEvent.ticketCount }}</h6>
-                        <h6 v-if="activeEvent.capacity > 0"> Tickets Left: {{ activeEvent.capacity }}</h6>
-                        <p class="fs-1 border border-danger bg-danger text-center" v-else> Show is sold out</p>
+                        <h6 v-if="activeEvent.capacity > activeEvent.ticketCount"> Tickets Left: {{ activeEvent.capacity }}</h6>
+                        <p v-else class="fs-1 border border-danger bg-danger text-center"> Show is sold out</p>
                         <p v-if="activeEvent.ticketCount > 0"> You are attending this event</p>
                     </div>
                 </div>
@@ -37,12 +37,12 @@
                 <CommentModal />
                 <div v-for="comment in comments" :key="comment" class="col-12 text-light m-2 d-flex comment-card rounded p-3">
                     <div class="col-5">
-                        <img class="profile-img rounded-circle my-1 img-fluid" :src="comment.creator.picture" alt="">
+                        <img class="profile-img rounded-circle my-1 img-fluid" title="comment.creator.name" :src="comment.creator.picture" alt="">
                         <p>{{ comment.creator.name }}</p>
                     </div>
                     <div class="col-7 shadow rounded p-2">
                         {{ comment.body }}
-                        <button v-if="comment.creatorId == account.id"  @click="destroyComment()" class=" text-end btn btn-danger mdi mdi-delete-empty"></button>
+                        <button v-if="comment.creatorId == account.id"  @click="destroyComment(comment.id)" class=" text-end btn btn-danger mdi mdi-delete-empty"></button>
                     </div>
                 </div>
 
@@ -139,13 +139,13 @@ export default {
                 }
             },
 
-            async destroyComment(){
+            async destroyComment(commentId){
                  try {
                      const deleteComment = await Pop.confirm('You wanna delete this comment?')
                      if(!deleteComment){
                          return
                         }
-                    const commentId = route.params.commentId
+                    // const commentId = route.params.commentId
                     await commentsService.destroyComment(commentId)
                 } catch (error) {
                     Pop.error(error)

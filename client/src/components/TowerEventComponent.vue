@@ -18,7 +18,6 @@ import { TowerEvent } from '../models/TowerEvent';
 export default {
     props: { towerEventProp: {type: TowerEvent, required: true}},
     setup(){
-        
     return { 
         
      }
